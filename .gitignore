@@ -22,6 +22,10 @@ x86/
 *.VC.db
 *.VC.VC.opendb
 
+# CMake
+build/
+cmake-build-*/
+
 # Build results
 *.exe
 *.out

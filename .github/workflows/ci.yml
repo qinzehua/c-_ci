@@ -26,3 +26,17 @@ jobs:
           /p:PlatformToolset=v143
           /m
           /verbosity:minimal
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure & build (CMake)
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --parallel
+
+      - name: Smoke run
+        run: timeout 3s ./build/simple_clock || true

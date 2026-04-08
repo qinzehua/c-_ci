@@ -18,12 +18,12 @@ int main() {
     while (true) {
         const auto now = std::chrono::system_clock::now();
         const std::time_t t = std::chrono::system_clock::to_time_t(now);
-        std::tm local{};
-#if defined(_WIN32)
-        localtime_s(&local, &t);
-#else
-        localtime_r(&t, &local);
-#endif
+        const std::tm* const p = std::localtime(&t);
+        if (!p) {
+            std::cerr << "localtime failed\n";
+            return 1;
+        }
+        std::tm local = *p;
         std::ostringstream oss;
         oss << std::put_time(&local, "%Y-%m-%d %H:%M:%S");
         std::cout << '\r' << oss.str() << std::flush;
