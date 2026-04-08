@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build-msvc:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      # 本地工程可能使用 v145；CI 虚拟机通常为 VS2022 (v143)，此处覆盖以保证可构建
+      - name: Build (Release x64)
+        run: >
+          msbuild "86\86.vcxproj"
+          /p:Configuration=Release
+          /p:Platform=x64
+          /p:PlatformToolset=v143
+          /m
+          /verbosity:minimal
